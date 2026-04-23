@@ -1,0 +1,1051 @@
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Rajdhani', 'Segoe UI', Arial, sans-serif;
+  color: white;
+  background: #060d06;
+}
+
+/* APP */
+.app {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+/* WARNING BAR */
+.warning {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: #1a0a0a;
+  color: #ff4d4d;
+  padding: 8px 20px;
+  font-size: 11px;
+  z-index: 100;
+  text-align: center;
+  letter-spacing: 2px;
+  border-bottom: 1px solid #3d0000;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* HOME PAGE */
+/* Using a reliable military/tactical Unsplash image */
+.homePage {
+  width: 100%;
+  height: 100vh;
+  background-image: url(../../../kitREACT/src/assets/BACKGROUND.jpeg);
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: cover;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+/* DARK OVERLAY */
+.overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.82) 0%,
+    rgba(4, 18, 4, 0.78) 50%,
+    rgba(0, 0, 0, 0.88) 100%
+  );
+  top: 0;
+  left: 0;
+}
+
+/* SCANLINES EFFECT */
+.scanlines {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 255, 80, 0.015) 2px,
+    rgba(0, 255, 80, 0.015) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* HERO */
+.hero {
+  position: relative;
+  z-index: 2;
+  max-width: 720px;
+  padding: 20px;
+  padding-top: 60px;
+}
+
+/* BADGE */
+.badge {
+  display: inline-block;
+  background: rgba(0, 80, 0, 0.5);
+  border: 1px solid #3a7a3a;
+  color: #6cff7c;
+  padding: 4px 14px;
+  font-size: 11px;
+  letter-spacing: 3px;
+  border-radius: 3px;
+  margin-bottom: 18px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ICON */
+.icon {
+  width: 54px;
+  height: 54px;
+  background: rgba(42, 61, 42, 0.8);
+  border: 1px solid #3a7a3a;
+  border-radius: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto 18px;
+  font-size: 20px;
+}
+
+.icon.big {
+  width: 74px;
+  height: 74px;
+  font-size: 30px;
+  margin-bottom: 16px;
+}
+
+/* TITLE */
+.heroTitle {
+  font-size: 34px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  margin-bottom: 16px;
+  line-height: 1.2;
+  text-shadow: 0 0 30px rgba(108, 255, 124, 0.25);
+  font-family: 'Rajdhani', sans-serif;
+}
+
+/* TEXT */
+.heroText {
+  font-size: 15px;
+  color: #b0b8b0;
+  line-height: 1.7;
+  margin-bottom: 28px;
+  max-width: 560px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* FEATURES */
+.features {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.feature {
+  border: 1px solid rgba(60, 100, 60, 0.6);
+  padding: 9px 16px;
+  border-radius: 4px;
+  font-size: 12px;
+  background: rgba(10, 20, 10, 0.75);
+  letter-spacing: 1px;
+  color: #c8d8c8;
+  backdrop-filter: blur(4px);
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.feature:hover {
+  border-color: #3a7a3a;
+  color: #6cff7c;
+}
+
+/* BUTTONS */
+.homeButtons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.loginBtn {
+  padding: 13px 30px;
+  background: linear-gradient(135deg, #1e3a1e, #2d5c2d);
+  border: 1px solid #3a7a3a;
+  border-radius: 4px;
+  color: #6cff7c;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  font-family: 'Rajdhani', sans-serif;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.loginBtn:hover {
+  background: linear-gradient(135deg, #2d5c2d, #3d7a3d);
+  box-shadow: 0 0 14px rgba(108, 255, 124, 0.2);
+}
+
+.loginBtn.fullWidth {
+  width: 100%;
+  margin-top: 20px;
+}
+
+.secondaryBtn {
+  padding: 13px 30px;
+  background: transparent;
+  border: 1px solid #3a5a3a;
+  border-radius: 4px;
+  color: #6cff7c;
+  cursor: pointer;
+  font-size: 13px;
+  letter-spacing: 2px;
+  font-weight: 700;
+  font-family: 'Rajdhani', sans-serif;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.secondaryBtn:hover {
+  background: rgba(60, 100, 60, 0.15);
+  border-color: #6cff7c;
+}
+
+/* STATUS BAR */
+.statusBar {
+  font-size: 10px;
+  color: #4a7a4a;
+  letter-spacing: 2px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: #6cff7c;
+  border-radius: 50%;
+  margin-right: 5px;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.3; }
+}
+
+/* LOGIN CARD */
+.loginCard {
+  width: 380px;
+  padding: 44px 40px;
+  background: rgba(10, 16, 10, 0.97);
+  border: 1px solid #1e3a1e;
+  border-top: 2px solid #3a7a3a;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8), 0 0 20px rgba(0, 80, 0, 0.1);
+  margin-top: 40px;
+}
+
+.title {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-top: 10px;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.subtitle {
+  font-size: 10px;
+  color: #4a7a4a;
+  letter-spacing: 3px;
+  margin-bottom: 20px;
+  margin-top: 4px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* FORM */
+.label {
+  text-align: left;
+  font-size: 11px;
+  margin-top: 16px;
+  color: #4a7a4a;
+  letter-spacing: 2px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-top: 6px;
+  background: #0a120a;
+  border: 1px solid #1e3a1e;
+  border-radius: 4px;
+  color: #c8ffc8;
+  font-size: 13px;
+  font-family: 'Share Tech Mono', monospace;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.input:focus {
+  border-color: #3a7a3a;
+  box-shadow: 0 0 8px rgba(108, 255, 124, 0.1);
+}
+
+.input option {
+  background: #0a120a;
+  color: #c8ffc8;
+}
+
+.switchText {
+  margin-top: 14px;
+  font-size: 12px;
+  color: #4a6a4a;
+  letter-spacing: 1px;
+}
+
+.switchText span {
+  color: #6cff7c;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.switchText span:hover {
+  color: #a0ffa8;
+}
+
+/* FOOTER */
+.footer {
+  margin-top: 20px;
+  font-size: 10px;
+  color: #3a5a3a;
+  letter-spacing: 2px;
+  font-family: 'Share Tech Mono', monospace;
+  border-top: 1px solid #1a2a1a;
+  padding-top: 14px;
+}
+
+.green {
+  color: #6cff7c;
+}
+/* ── DASHBOARD ── */
+.dashboardPage {
+  width: 100%;
+  min-height: 100vh;
+  background: #060d06;
+  padding: 20px;
+  padding-top: 60px;
+}
+
+.dashboardBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #1e3a1e;
+  padding-bottom: 16px;
+  margin-bottom: 28px;
+}
+
+.dashboardBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.dashIcon {
+  font-size: 20px;
+}
+
+.dashTitle {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  color: #6cff7c;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.dashboardBarRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.dashUser {
+  font-size: 11px;
+  color: #4a7a4a;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.dashGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.dashPanel {
+  background: rgba(10, 16, 10, 0.97);
+  border: 1px solid #1e3a1e;
+  border-top: 2px solid #3a7a3a;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.panelTitle {
+  font-size: 12px;
+  color: #6cff7c;
+  letter-spacing: 2px;
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #1e3a1e;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.statRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 0;
+  border-bottom: 1px solid #0d1a0d;
+}
+
+.statRow:last-child { border-bottom: none; }
+
+.statLabel {
+  font-size: 11px;
+  color: #4a7a4a;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.statValue {
+  font-size: 13px;
+  color: #c8ffc8;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.statValue.green { color: #6cff7c; }
+.statValue.red   { color: #ff4d4d; }
+
+.soldierRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 1px solid #0d1a0d;
+}
+
+.soldierRow:last-child { border-bottom: none; }
+
+.soldierInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.soldierName {
+  font-size: 13px;
+  color: #c8ffc8;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.soldierMeta {
+  font-size: 10px;
+  color: #4a7a4a;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.soldierActions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.statusBadge {
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.statusBadge.active {
+  background: rgba(108, 255, 124, 0.1);
+  color: #6cff7c;
+  border: 1px solid #3a7a3a;
+}
+
+.statusBadge.wiped {
+  background: rgba(255, 77, 77, 0.1);
+  color: #ff4d4d;
+  border: 1px solid #7a3a3a;
+}
+
+.wipeBtn {
+  padding: 6px 14px;
+  background: #3d0000;
+  color: #ff4d4d;
+  border: 1px solid #7a0000;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background 0.2s;
+}
+
+.wipeBtn:hover { background: #5a0000; }
+
+.sosBtn {
+  width: 100%;
+  padding: 14px;
+  background: #3d0000;
+  color: #ff4d4d;
+  border: 1px solid #7a0000;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  letter-spacing: 2px;
+  font-family: 'Rajdhani', sans-serif;
+  transition: background 0.2s;
+}
+
+.sosBtn:hover { background: #5a0000; }
+
+.emptyText {
+  font-size: 12px;
+  color: #3a5a3a;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  padding: 20px 0;
+}
+
+.dashAlert {
+  padding: 10px 16px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 20px;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+}
+
+.dashAlertSuccess {
+  background: rgba(108, 255, 124, 0.1);
+  border: 1px solid #3a7a3a;
+  color: #6cff7c;
+}
+
+.dashAlertError {
+  background: rgba(255, 77, 77, 0.1);
+  border: 1px solid #7a3a3a;
+  color: #ff4d4d;
+}
+/* ── CHANNELS ── */
+.channelRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #0d1a0d;
+}
+
+.channelRow:last-child { border-bottom: none; }
+
+.channelInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.channelName {
+  font-size: 14px;
+  color: #6cff7c;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.channelMeta {
+  font-size: 11px;
+  color: #4a7a4a;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* ── CHAT ── */
+.chatPage {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: #060d06;
+  padding-top: 40px;
+}
+
+.chatHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: rgba(10, 16, 10, 0.97);
+  border-bottom: 1px solid #1e3a1e;
+}
+
+.chatHeaderLeft {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.backBtn {
+  padding: 8px 14px;
+  background: transparent;
+  border: 1px solid #1e3a1e;
+  border-radius: 4px;
+  color: #6cff7c;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background 0.2s;
+}
+
+.backBtn:hover { background: rgba(60, 100, 60, 0.15); }
+
+.chatChannelName {
+  font-size: 16px;
+  font-weight: 700;
+  color: #6cff7c;
+  letter-spacing: 2px;
+  font-family: 'Rajdhani', sans-serif;
+}
+
+.chatChannelDesc {
+  font-size: 10px;
+  color: #4a7a4a;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.chatHeaderRight {
+  font-size: 11px;
+  color: #4a7a4a;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+/* MESSAGES AREA */
+.chatMessages {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.chatMessages::-webkit-scrollbar { width: 4px; }
+.chatMessages::-webkit-scrollbar-track { background: #060d06; }
+.chatMessages::-webkit-scrollbar-thumb { background: #1e3a1e; }
+
+.emptyChat {
+  text-align: center;
+  color: #3a5a3a;
+  font-size: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  margin-top: 40px;
+}
+
+/* MESSAGE BUBBLES */
+.messageBubble {
+  max-width: 65%;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.messageBubble.mine {
+  align-self: flex-end;
+  background: rgba(30, 58, 30, 0.8);
+  border: 1px solid #2a5a2a;
+}
+
+.messageBubble.theirs {
+  align-self: flex-start;
+  background: rgba(10, 20, 10, 0.9);
+  border: 1px solid #1e3a1e;
+}
+
+.messageBubble.commanderMsg.theirs {
+  border-color: #4a7a2a;
+  background: rgba(20, 40, 10, 0.9);
+}
+
+.messageBubble.commanderMsg.mine {
+  border-color: #4a7a2a;
+  background: rgba(30, 60, 10, 0.8);
+}
+
+.msgSender {
+  font-size: 10px;
+  color: #6cff7c;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.commanderTag {
+  background: rgba(108, 255, 124, 0.15);
+  border: 1px solid #3a7a3a;
+  color: #6cff7c;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.msgText {
+  font-size: 14px;
+  color: #c8ffc8;
+  font-family: 'Rajdhani', sans-serif;
+  line-height: 1.4;
+}
+
+.msgTime {
+  font-size: 9px;
+  color: #3a5a3a;
+  font-family: 'Share Tech Mono', monospace;
+  align-self: flex-end;
+}
+
+.readReceipts {
+  font-size: 9px;
+  color: #4a7a4a;
+  font-family: 'Share Tech Mono', monospace;
+  align-self: flex-end;
+}
+
+/* CHAT INPUT */
+.chatInput {
+  display: flex;
+  gap: 10px;
+  padding: 16px 24px;
+  background: rgba(10, 16, 10, 0.97);
+  border-top: 1px solid #1e3a1e;
+}
+
+.chatInputField {
+  flex: 1;
+  padding: 12px 16px;
+  background: #0a120a;
+  border: 1px solid #1e3a1e;
+  border-radius: 4px;
+  color: #c8ffc8;
+  font-size: 13px;
+  font-family: 'Share Tech Mono', monospace;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.chatInputField:focus { border-color: #3a7a3a; }
+
+.sendBtn {
+  padding: 12px 24px;
+  background: linear-gradient(135deg, #1e3a1e, #2d5c2d);
+  border: 1px solid #3a7a3a;
+  border-radius: 4px;
+  color: #6cff7c;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  cursor: pointer;
+  font-family: 'Rajdhani', sans-serif;
+  transition: background 0.2s;
+}
+
+.sendBtn:hover { background: linear-gradient(135deg, #2d5c2d, #3d7a3d); }
+/* ── BURN ON READ ── */
+.burnMsg {
+  border-color: #7a3a00 !important;
+  background: rgba(80, 30, 0, 0.4) !important;
+}
+
+.burnIndicator {
+  font-size: 10px;
+  color: #ff6600;
+  font-family: 'Share Tech Mono', monospace;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+  animation: burnPulse 1s infinite;
+}
+
+@keyframes burnPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.4; }
+}
+
+.burnToolbar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 24px;
+  background: rgba(10, 16, 10, 0.97);
+  border-top: 1px solid #1e3a1e;
+}
+
+.burnToggleBtn {
+  padding: 7px 16px;
+  background: transparent;
+  border: 1px solid #3a3a1e;
+  border-radius: 4px;
+  color: #aaa;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  transition: all 0.2s;
+}
+
+.burnToggleBtn.burnActive {
+  background: rgba(80, 30, 0, 0.4);
+  border-color: #ff6600;
+  color: #ff6600;
+}
+
+.burnTimerSelect {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.burnLabel {
+  font-size: 10px;
+  color: #ff6600;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.burnSelect {
+  padding: 6px 10px;
+  background: #0a120a;
+  border: 1px solid #ff6600;
+  border-radius: 4px;
+  color: #ff6600;
+  font-size: 11px;
+  font-family: 'Share Tech Mono', monospace;
+  outline: none;
+}
+
+.burnSelect option { background: #0a120a; }
+
+.burnInputField {
+  border-color: #ff6600 !important;
+  color: #ff6600 !important;
+}
+
+.burnInputField::placeholder { color: #ff660080 !important; }
+
+.burnSendBtn {
+  background: linear-gradient(135deg, #3a1e00, #5a3000) !important;
+  border-color: #ff6600 !important;
+  color: #ff6600 !important;
+}
+
+.burnSendBtn:hover {
+  background: linear-gradient(135deg, #5a3000, #7a4000) !important;
+}
+
+/* ── SOS ── */
+.sosPanel {
+  border-top-color: #7a0000 !important;
+}
+
+.sosWarningText {
+  font-size: 11px;
+  color: #7a4a4a;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.sosBtn {
+  width: 100%;
+  padding: 18px;
+  background: linear-gradient(135deg, #3d0000, #5a0000);
+  color: #ff4d4d;
+  border: 1px solid #7a0000;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  letter-spacing: 2px;
+  font-family: 'Rajdhani', sans-serif;
+  transition: background 0.2s, box-shadow 0.2s;
+  animation: sosPulse 2s infinite;
+}
+
+.sosBtn:hover {
+  background: linear-gradient(135deg, #5a0000, #7a0000);
+  box-shadow: 0 0 20px rgba(255, 77, 77, 0.3);
+}
+
+.sosBtn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  animation: none;
+}
+
+@keyframes sosPulse {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 77, 77, 0); }
+  50% { box-shadow: 0 0 15px rgba(255, 77, 77, 0.25); }
+}
+
+.sosTriggeredBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 0;
+}
+
+.sosTriggeredIcon {
+  font-size: 40px;
+  animation: sosPulse 1s infinite;
+}
+
+.sosTriggeredText {
+  font-size: 13px;
+  color: #ff4d4d;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+  letter-spacing: 1px;
+}
+
+.sosTriggeredSub {
+  font-size: 11px;
+  color: #7a4a4a;
+  font-family: 'Share Tech Mono', monospace;
+  text-align: center;
+}
+
+.sosResetBtn {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid #7a0000;
+  border-radius: 4px;
+  color: #ff4d4d;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background 0.2s;
+}
+
+.sosResetBtn:hover { background: rgba(122, 0, 0, 0.2); }
+
+/* ── SOS ALERTS ── */
+.sosActivePanel {
+  border-top-color: #ff0000 !important;
+  border-color: #7a0000 !important;
+  animation: sosBorder 1.5s infinite;
+}
+
+@keyframes sosBorder {
+  0%, 100% { box-shadow: 0 0 0 rgba(255, 0, 0, 0); }
+  50% { box-shadow: 0 0 15px rgba(255, 0, 0, 0.2); }
+}
+
+.sosBadge {
+  background: rgba(255, 77, 77, 0.15);
+  border: 1px solid #7a0000;
+  color: #ff4d4d;
+  padding: 3px 10px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-weight: bold;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  animation: sosPulse 1s infinite;
+}
+
+.sosAlertRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid #2a0000;
+}
+
+.sosAlertRow:last-child { border-bottom: none; }
+
+.sosAlertIcon {
+  font-size: 24px;
+  animation: sosPulse 1s infinite;
+}
+
+.sosAlertInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.sosAlertName {
+  font-size: 13px;
+  color: #ff4d4d;
+  font-family: 'Share Tech Mono', monospace;
+  font-weight: bold;
+}
+
+.sosAlertMeta {
+  font-size: 10px;
+  color: #7a4a4a;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.sosAlertMessage {
+  font-size: 11px;
+  color: #ff4d4d;
+  font-family: 'Share Tech Mono', monospace;
+  opacity: 0.8;
+}
+
+.sosResolveBtn {
+  padding: 6px 14px;
+  background: transparent;
+  border: 1px solid #3a7a3a;
+  border-radius: 4px;
+  color: #6cff7c;
+  font-size: 11px;
+  cursor: pointer;
+  letter-spacing: 1px;
+  font-family: 'Share Tech Mono', monospace;
+  transition: background 0.2s;
+}
+
+.sosResolveBtn:hover { background: rgba(60, 122, 60, 0.2); }
