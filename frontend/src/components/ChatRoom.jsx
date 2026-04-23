@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:5000");
+import BASE_URL from "../config";
 
 export default function ChatRoom({ channel, setPage }) {
   const [messages, setMessages] = useState([]);
@@ -11,29 +10,32 @@ export default function ChatRoom({ channel, setPage }) {
   const [isBurnMode, setIsBurnMode] = useState(false);
   const [burnSeconds, setBurnSeconds] = useState(10);
   const bottomRef = useRef(null);
+  const socketRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const isCommander = user.rank === "Commander";
 
   useEffect(() => {
-    socket.emit("join_channel", channel._id);
+    // Create socket connection
+    socketRef.current = io(BASE_URL, {
+      transports: ["websocket", "polling"]
+    });
+
+    socketRef.current.emit("join_channel", channel._id);
     fetchMessages();
 
-    // Receive normal or burn message
-    socket.on("receive_message", (msg) => {
+    socketRef.current.on("receive_message", (msg) => {
       setMessages(prev => [...prev, msg]);
     });
 
-    // Remove burned message from screen
-    socket.on("burn_message", ({ messageId }) => {
+    socketRef.current.on("burn_message", ({ messageId }) => {
       setMessages(prev => prev.filter(m => m._id !== messageId));
     });
 
     return () => {
-      socket.emit("leave_channel", channel._id);
-      socket.off("receive_message");
-      socket.off("burn_message");
+      socketRef.current.emit("leave_channel", channel._id);
+      socketRef.current.disconnect();
     };
   }, [channel._id]);
 
@@ -45,7 +47,6 @@ export default function ChatRoom({ channel, setPage }) {
   // Client-side burn timer
   useEffect(() => {
     const timers = [];
-
     messages.forEach(msg => {
       if (msg.burnAfter) {
         const remaining = new Date(msg.burnAfter) - Date.now();
@@ -55,19 +56,17 @@ export default function ChatRoom({ channel, setPage }) {
           }, remaining);
           timers.push(timer);
         } else {
-          // Already expired
           setMessages(prev => prev.filter(m => m._id !== msg._id));
         }
       }
     });
-
     return () => timers.forEach(clearTimeout);
   }, [messages.length]);
 
   const fetchMessages = async () => {
     try {
       const res = await fetch(
-        `http://localhost:5000/api/messages/${channel._id}`,
+        `${BASE_URL}/api/messages/${channel._id}`,
         { headers: { authorization: token } }
       );
       const data = await res.json();
@@ -83,12 +82,11 @@ export default function ChatRoom({ channel, setPage }) {
     }
   };
 
-  // ── SEND NORMAL MESSAGE ──
   const handleSend = () => {
     if (!newMessage.trim()) return;
 
     if (isBurnMode && isCommander) {
-      socket.emit("send_burn_message", {
+      socketRef.current.emit("send_burn_message", {
         channelId: channel._id,
         senderId: user.serviceId,
         senderName: user.name,
@@ -97,7 +95,7 @@ export default function ChatRoom({ channel, setPage }) {
         burnSeconds
       });
     } else {
-      socket.emit("send_message", {
+      socketRef.current.emit("send_message", {
         channelId: channel._id,
         senderId: user.serviceId,
         senderName: user.name,
@@ -183,7 +181,6 @@ export default function ChatRoom({ channel, setPage }) {
                 </div>
               )}
 
-              {/* Burn indicator */}
               {isBurnMsg && (
                 <div className="burnIndicator">
                   🔥 BURN MESSAGE — {getBurnTimeLeft(msg.burnAfter)}s remaining
@@ -193,7 +190,6 @@ export default function ChatRoom({ channel, setPage }) {
               <div className="msgText">{msg.text}</div>
               <div className="msgTime">{formatTime(msg.createdAt)}</div>
 
-              {/* Read receipts for Commander's own messages */}
               {isCommanderMsg && isMine && (
                 <div className="readReceipts">
                   👁 Read by {msg.readBy.length - 1} soldier(s)

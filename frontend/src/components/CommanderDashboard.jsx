@@ -1,7 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { io } from "socket.io-client";
-
-const socket = io("http://localhost:5000");
+import BASE_URL from "../config";
 
 export default function CommanderDashboard({ setPage, setActiveChannel }) {
   const [soldiers, setSoldiers] = useState([]);
@@ -15,6 +14,7 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
   const [selectedChannel, setSelectedChannel] = useState("");
   const [memberServiceId, setMemberServiceId] = useState("");
 
+  const socketRef = useRef(null);
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
 
@@ -23,19 +23,22 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
     fetchChannels();
     fetchSosAlerts();
 
-    // Listen for real-time SOS
-    socket.on("receive_sos", (sos) => {
+    socketRef.current = io(BASE_URL, {
+      transports: ["websocket", "polling"]
+    });
+
+    socketRef.current.on("receive_sos", (sos) => {
       setSosAlerts(prev => [sos, ...prev]);
     });
 
     return () => {
-      socket.off("receive_sos");
+      socketRef.current.disconnect();
     };
   }, []);
 
   const fetchSoldiers = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/admin/soldiers", {
+      const res = await fetch(`${BASE_URL}/api/admin/soldiers`, {
         headers: { authorization: token }
       });
       const data = await res.json();
@@ -49,7 +52,7 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
 
   const fetchChannels = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/channels/all", {
+      const res = await fetch(`${BASE_URL}/api/channels/all`, {
         headers: { authorization: token }
       });
       const data = await res.json();
@@ -63,7 +66,7 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
 
   const fetchSosAlerts = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/sos/active", {
+      const res = await fetch(`${BASE_URL}/api/sos/active`, {
         headers: { authorization: token }
       });
       const data = await res.json();
@@ -77,13 +80,10 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
 
   const handleResolveSOSAlert = async (sosId) => {
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/sos/resolve/${sosId}`,
-        {
-          method: "PUT",
-          headers: { authorization: token }
-        }
-      );
+      const res = await fetch(`${BASE_URL}/api/sos/resolve/${sosId}`, {
+        method: "PUT",
+        headers: { authorization: token }
+      });
       const data = await res.json();
       setIsError(!res.ok);
       setMessage(data.message);
@@ -101,7 +101,7 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/channels/create", {
+      const res = await fetch(`${BASE_URL}/api/channels/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -128,7 +128,7 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
       return;
     }
     try {
-      const res = await fetch("http://localhost:5000/api/channels/add-member", {
+      const res = await fetch(`${BASE_URL}/api/channels/add-member`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -153,13 +153,10 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
   const handleDeleteChannel = async (channelId, name) => {
     if (!window.confirm(`Delete channel "${name}"?`)) return;
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/channels/delete/${channelId}`,
-        {
-          method: "DELETE",
-          headers: { authorization: token }
-        }
-      );
+      const res = await fetch(`${BASE_URL}/api/channels/delete/${channelId}`, {
+        method: "DELETE",
+        headers: { authorization: token }
+      });
       const data = await res.json();
       setIsError(!res.ok);
       setMessage(data.message);
@@ -173,13 +170,10 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
   const activateKillSwitch = async (serviceId, name) => {
     if (!window.confirm(`🔴 Activate Kill Switch for ${name}?`)) return;
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/admin/killswitch/${serviceId}`,
-        {
-          method: "PUT",
-          headers: { authorization: token }
-        }
-      );
+      const res = await fetch(`${BASE_URL}/api/admin/killswitch/${serviceId}`, {
+        method: "PUT",
+        headers: { authorization: token }
+      });
       const data = await res.json();
       setIsError(!res.ok);
       setMessage(data.message);
