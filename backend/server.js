@@ -18,13 +18,15 @@ const app = express();
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin:'*',
+    origin:['https://military-chat-app.vercel.app/'],
     methods: ['GET', 'POST']
   }
 });
 
 // Middleware
-app.use(cors());
+app.use(cors({
+  origin:['https://military-chat-app.vercel.app/']
+}));
 app.use(express.json());
 
 // Routes
