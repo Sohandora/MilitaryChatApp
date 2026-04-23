@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import BASE_URL from "../config";
 
 export default function Auth({ setPage, mode, setMode }) {
   const [message, setMessage] = useState("");
@@ -12,7 +13,7 @@ export default function Auth({ setPage, mode, setMode }) {
   // ── LOGIN ──
   const handleLogin = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${BASE_URL}/api/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData)
@@ -45,7 +46,7 @@ export default function Auth({ setPage, mode, setMode }) {
   // ── REGISTER ──
   const handleRegister = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
+      const res = await fetch(`${BASE_URL}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(registerData)

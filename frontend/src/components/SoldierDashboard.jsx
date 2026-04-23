@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { io } from "socket.io-client";
+import BASE_URL from "../config";
 
-const socket = io("http://localhost:5000");
+const socket = io(BASE_URL);
 
 export default function SoldierDashboard({ setPage, setActiveChannel }) {
   const [channels, setChannels] = useState([]);
@@ -20,7 +21,7 @@ export default function SoldierDashboard({ setPage, setActiveChannel }) {
 
   const fetchMyChannels = async () => {
     try {
-      const res = await fetch("http://localhost:5000/api/channels/mine", {
+      const res = await fetch(`${BASE_URL}/api/channels/mine`, {
         headers: { authorization: token }
       });
       const data = await res.json();
@@ -39,7 +40,7 @@ export default function SoldierDashboard({ setPage, setActiveChannel }) {
     setSosLoading(true);
     try {
       // Save to DB via API
-      const res = await fetch("http://localhost:5000/api/sos/trigger", {
+      const res = await fetch(`${BASE_URL}/api/sos/trigger`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
