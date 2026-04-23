@@ -100,10 +100,10 @@ npm run dev
 
 ## 👥 Team
 
-| Member | Role |
+| Member |
 |---|---|
-| Sohan Dora (CST-A1 06) | Auth, Chain-of-Command, Kill Switch, Dashboards |
-| Swasti Prajnya Dash (CST-A1 14) | Chat, SOS, Burn-on-Read |
+| Sohan Dora |
+| Swasti Prajnya Dash |
 
 ---
 
