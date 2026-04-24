@@ -25,9 +25,13 @@ const io = new Server(server, {
 
 // Middleware
 app.use(cors({
-  origin:['https://military-chat-app.vercel.app'],
-  methods: ['GET', 'POST']
+  origin: "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "authorization"]
 }));
+
+// Handle preflight requests
+app.options("*", cors());
 app.use(express.json());
 
 // Routes
