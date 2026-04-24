@@ -7,7 +7,7 @@ export default function Auth({ setPage, mode, setMode }) {
 
   const [loginData, setLoginData] = useState({ serviceId: "", password: "" });
   const [registerData, setRegisterData] = useState({
-    name: "", serviceId: "", password: "", rank: "Soldier", unit: ""
+    name: "", serviceId: "", password: "", rank: "Soldier", unit: "", accessCode: ""
   });
 
   // ── LOGIN ──
@@ -159,6 +159,23 @@ export default function Auth({ setPage, mode, setMode }) {
             placeholder="e.g. Alpha Squad"
             onChange={e => setRegisterData({ ...registerData, unit: e.target.value })}
           />
+
+          <div className="label">ACCESS CODE</div>
+          <input
+            className="input"
+            type="password"
+            placeholder="Enter your clearance code"
+            onChange={e => setRegisterData({ ...registerData, accessCode: e.target.value })}
+          />
+          <div style={{
+            fontSize: "10px",
+            color: "#4a7a4a",
+            fontFamily: "'Share Tech Mono', monospace",
+            marginTop: "4px",
+            textAlign: "left"
+          }}>
+            ⚠ Contact your Commander for access code
+          </div>
 
           <button className="loginBtn fullWidth" onClick={handleRegister}>
             REGISTER

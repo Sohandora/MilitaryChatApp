@@ -7,20 +7,36 @@ const User = require('../models/User');
 // ── REGISTER ──────────────────────────────
 router.post('/register', async (req, res) => {
   try {
-    const { name, serviceId, password, rank, unit } = req.body;
+    const { name, serviceId, password, rank, unit, accessCode } = req.body;
+
+    // Verify access code based on rank
+    if (rank === 'Commander') {
+      if (accessCode !== process.env.COMMANDER_CODE) {
+        return res.status(403).json({
+          message: '❌ Invalid Commander access code.'
+        });
+      }
+    }
+
+    if (rank === 'Soldier') {
+      if (accessCode !== process.env.SOLDIER_CODE) {
+        return res.status(403).json({
+          message: '❌ Invalid Soldier access code.'
+        });
+      }
+    }
 
     // Check if Service ID already exists
     const existingUser = await User.findOne({ serviceId });
     if (existingUser) {
-      return res.status(400).json({ 
-        message: '❌ Service ID already registered.' 
+      return res.status(400).json({
+        message: '❌ Service ID already registered.'
       });
     }
 
     // Encrypt password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Save new user
     const newUser = new User({
       name,
       serviceId,
