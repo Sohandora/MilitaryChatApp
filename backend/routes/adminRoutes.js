@@ -19,22 +19,28 @@ router.put('/killswitch/:serviceId', verifyCommander, async (req, res) => {
   try {
     const { serviceId } = req.params;
 
-    const soldier = await User.findOneAndUpdate(
-      { serviceId },
-      { deviceWiped: true, isActive: false },
-      { new: true }
-    );
+    console.log('🔴 Kill Switch triggered for:', serviceId);
+
+    const soldier = await User.findOne({ serviceId });
 
     if (!soldier) {
+      console.log('❌ Soldier not found:', serviceId);
       return res.status(404).json({ message: '❌ Soldier not found.' });
     }
 
-    res.status(200).json({ 
-      message: `🔴 Kill Switch activated for ${soldier.name}` 
+    soldier.deviceWiped = true;
+    soldier.isActive = false;
+    await soldier.save();
+
+    console.log('✅ Kill Switch activated for:', soldier.name);
+
+    res.status(200).json({
+      message: `🔴 Kill Switch activated for ${soldier.name}`
     });
 
   } catch (err) {
-    res.status(500).json({ message: '❌ Server error' });
+    console.log('❌ Kill Switch error:', err.message);
+    res.status(500).json({ message: '❌ Server error: ' + err.message });
   }
 });
 

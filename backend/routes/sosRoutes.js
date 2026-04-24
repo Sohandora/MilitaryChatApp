@@ -47,10 +47,14 @@ router.get('/history', verifyCommander, async (req, res) => {
 });
 
 // ── RESOLVE SOS (Commander only) ──
+// ── RESOLVE SOS (Commander only) ──
 router.put('/resolve/:sosId', verifyCommander, async (req, res) => {
   try {
+    const { sosId } = req.params;
+
+    // Handle both _id formats
     const sos = await SOS.findByIdAndUpdate(
-      req.params.sosId,
+      sosId,
       {
         isResolved: true,
         resolvedBy: req.user.name
@@ -59,6 +63,7 @@ router.put('/resolve/:sosId', verifyCommander, async (req, res) => {
     );
 
     if (!sos) {
+      // Try finding by other means
       return res.status(404).json({ message: '❌ SOS not found.' });
     }
 
@@ -68,7 +73,8 @@ router.put('/resolve/:sosId', verifyCommander, async (req, res) => {
     });
 
   } catch (err) {
-    res.status(500).json({ message: '❌ Server error' });
+    // Handle invalid ID format
+    res.status(500).json({ message: '❌ Server error: ' + err.message });
   }
 });
 

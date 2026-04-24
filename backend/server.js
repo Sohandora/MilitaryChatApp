@@ -151,7 +151,7 @@ io.on('connection', (socket) => {
 
       // Broadcast SOS to ALL connected commanders
       io.emit('receive_sos', {
-        _id: sos._id,
+        _id: sos._id.toString(),
         soldierName,
         soldierServiceId,
         unit,

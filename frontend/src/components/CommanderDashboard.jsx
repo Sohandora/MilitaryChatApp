@@ -79,20 +79,27 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
   };
 
   const handleResolveSOSAlert = async (sosId) => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/sos/resolve/${sosId}`, {
-        method: "PUT",
-        headers: { authorization: token }
-      });
-      const data = await res.json();
-      setIsError(!res.ok);
-      setMessage(data.message);
+  if (!sosId) {
+    setIsError(true);
+    setMessage("❌ Invalid SOS ID.");
+    return;
+  }
+  try {
+    const res = await fetch(`${BASE_URL}/api/sos/resolve/${sosId}`, {
+      method: "PUT",
+      headers: { authorization: token }
+    });
+    const data = await res.json();
+    setIsError(!res.ok);
+    setMessage(data.message);
+    if (res.ok) {
       setSosAlerts(prev => prev.filter(s => s._id !== sosId));
-    } catch {
-      setIsError(true);
-      setMessage("❌ Failed to resolve SOS.");
     }
-  };
+  } catch {
+    setIsError(true);
+    setMessage("❌ Failed to resolve SOS.");
+  }
+};
 
   const handleCreateChannel = async () => {
     if (!channelName.trim()) {
