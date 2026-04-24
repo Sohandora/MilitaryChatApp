@@ -13,7 +13,7 @@ router.post('/register', async (req, res) => {
     if (rank === 'Commander') {
       if (accessCode !== process.env.COMMANDER_CODE) {
         return res.status(403).json({
-          message: '❌ Invalid Commander access code.'
+          message: '❌ Invalid Credentials.'
         });
       }
     }
@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
     if (rank === 'Soldier') {
       if (accessCode !== process.env.SOLDIER_CODE) {
         return res.status(403).json({
-          message: '❌ Invalid Soldier access code.'
+          message: '❌ Invalid Credentials.'
         });
       }
     }
