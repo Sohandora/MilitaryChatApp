@@ -14,6 +14,15 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
   const [selectedChannel, setSelectedChannel] = useState("");
   const [memberServiceId, setMemberServiceId] = useState("");
 
+  // Modal state
+  const [modal, setModal] = useState({
+    show: false,
+    icon: "",
+    title: "",
+    text: "",
+    onConfirm: null
+  });
+
   const socketRef = useRef(null);
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
@@ -35,6 +44,14 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
       socketRef.current.disconnect();
     };
   }, []);
+
+  const showModal = (icon, title, text, onConfirm) => {
+    setModal({ show: true, icon, title, text, onConfirm });
+  };
+
+  const hideModal = () => {
+    setModal({ show: false, icon: "", title: "", text: "", onConfirm: null });
+  };
 
   const fetchSoldiers = async () => {
     try {
@@ -79,27 +96,27 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
   };
 
   const handleResolveSOSAlert = async (sosId) => {
-  if (!sosId) {
-    setIsError(true);
-    setMessage("❌ Invalid SOS ID.");
-    return;
-  }
-  try {
-    const res = await fetch(`${BASE_URL}/api/sos/resolve/${sosId}`, {
-      method: "PUT",
-      headers: { authorization: token }
-    });
-    const data = await res.json();
-    setIsError(!res.ok);
-    setMessage(data.message);
-    if (res.ok) {
-      setSosAlerts(prev => prev.filter(s => s._id !== sosId));
+    if (!sosId) {
+      setIsError(true);
+      setMessage("❌ Invalid SOS ID.");
+      return;
     }
-  } catch {
-    setIsError(true);
-    setMessage("❌ Failed to resolve SOS.");
-  }
-};
+    try {
+      const res = await fetch(`${BASE_URL}/api/sos/resolve/${sosId}`, {
+        method: "PUT",
+        headers: { authorization: token }
+      });
+      const data = await res.json();
+      setIsError(!res.ok);
+      setMessage(data.message);
+      if (res.ok) {
+        setSosAlerts(prev => prev.filter(s => s._id !== sosId));
+      }
+    } catch {
+      setIsError(true);
+      setMessage("❌ Failed to resolve SOS.");
+    }
+  };
 
   const handleCreateChannel = async () => {
     if (!channelName.trim()) {
@@ -157,38 +174,52 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
     }
   };
 
-  const handleDeleteChannel = async (channelId, name) => {
-    if (!window.confirm(`Delete channel "${name}"?`)) return;
-    try {
-      const res = await fetch(`${BASE_URL}/api/channels/delete/${channelId}`, {
-        method: "DELETE",
-        headers: { authorization: token }
-      });
-      const data = await res.json();
-      setIsError(!res.ok);
-      setMessage(data.message);
-      fetchChannels();
-    } catch {
-      setIsError(true);
-      setMessage("❌ Failed to delete channel.");
-    }
+  const handleDeleteChannel = (channelId, name) => {
+    showModal(
+      "📡",
+      "DELETE CHANNEL",
+      `Are you sure you want to delete "${name}"? This cannot be undone.`,
+      async () => {
+        hideModal();
+        try {
+          const res = await fetch(`${BASE_URL}/api/channels/delete/${channelId}`, {
+            method: "DELETE",
+            headers: { authorization: token }
+          });
+          const data = await res.json();
+          setIsError(!res.ok);
+          setMessage(data.message);
+          fetchChannels();
+        } catch {
+          setIsError(true);
+          setMessage("❌ Failed to delete channel.");
+        }
+      }
+    );
   };
 
-  const activateKillSwitch = async (serviceId, name) => {
-    if (!window.confirm(`🔴 Activate Kill Switch for ${name}?`)) return;
-    try {
-      const res = await fetch(`${BASE_URL}/api/admin/killswitch/${serviceId}`, {
-        method: "PUT",
-        headers: { authorization: token }
-      });
-      const data = await res.json();
-      setIsError(!res.ok);
-      setMessage(data.message);
-      fetchSoldiers();
-    } catch {
-      setIsError(true);
-      setMessage("❌ Kill Switch failed.");
-    }
+  const activateKillSwitch = (serviceId, name) => {
+    showModal(
+      "🔴",
+      "ACTIVATE KILL SWITCH",
+      `This will remotely wipe all data from ${name}'s device. This action cannot be undone.`,
+      async () => {
+        hideModal();
+        try {
+          const res = await fetch(`${BASE_URL}/api/admin/killswitch/${serviceId}`, {
+            method: "PUT",
+            headers: { authorization: token }
+          });
+          const data = await res.json();
+          setIsError(!res.ok);
+          setMessage(data.message);
+          fetchSoldiers();
+        } catch {
+          setIsError(true);
+          setMessage("❌ Kill Switch failed.");
+        }
+      }
+    );
   };
 
   const handleLogout = () => {
@@ -205,6 +236,26 @@ export default function CommanderDashboard({ setPage, setActiveChannel }) {
 
   return (
     <div className="dashboardPage">
+
+      {/* CONFIRM MODAL */}
+      {modal.show && (
+        <div className="modalOverlay">
+          <div className="modalCard">
+            <div className="modalIcon">{modal.icon}</div>
+            <div className="modalTitle">{modal.title}</div>
+            <div className="modalText">{modal.text}</div>
+            <div className="modalButtons">
+              <button className="modalCancelBtn" onClick={hideModal}>
+                CANCEL
+              </button>
+              <button className="modalConfirmBtn" onClick={modal.onConfirm}>
+                CONFIRM
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* TOP BAR */}
       <div className="dashboardBar">
         <div className="dashboardBarLeft">
