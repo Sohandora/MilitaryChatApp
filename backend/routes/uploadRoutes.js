@@ -12,23 +12,19 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
-// Configure Multer Storage
+// Configure Storage
 const storage = new CloudinaryStorage({
-  cloudinary,
-  params: async (req, file) => {
-    const isImage = file.mimetype.startsWith('image/');
-    return {
-      folder: 'military-chat',
-      resource_type: isImage ? 'image' : 'raw',
-      allowed_formats: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt'],
-      public_id: `${Date.now()}-${file.originalname}`
-    };
+  cloudinary: cloudinary,
+  params: {
+    folder: 'military-chat',
+    allowed_formats: ['jpg', 'jpeg', 'png', 'pdf', 'doc', 'docx', 'txt'],
+    resource_type: 'auto'
   }
 });
 
 const upload = multer({
-  storage,
-  limits: { fileSize: 10 * 1024 * 1024 } // 10MB max
+  storage: storage,
+  limits: { fileSize: 10 * 1024 * 1024 }
 });
 
 // ── UPLOAD FILE ──
