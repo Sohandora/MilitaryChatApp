@@ -52,7 +52,20 @@ export default function Auth({ setPage, mode, setMode }) {
         body: JSON.stringify(registerData)
       });
       const data = await res.json();
+      // Validate Service ID format
+const serviceIdRegex = /^[A-Z]+-\d+-\d+$/;
+if (!serviceIdRegex.test(registerData.serviceId)) {
+  setIsError(true);
+  setMessage("❌ Invalid Service ID format. Use format: INDIA-7-9");
+  return;
+}
 
+// Validate password length
+if (registerData.password.length < 6) {
+  setIsError(true);
+  setMessage("❌ Password must be at least 6 characters.");
+  return;
+}
       if (!res.ok) {
         setIsError(true);
         setMessage(data.message || "❌ Registration failed.");

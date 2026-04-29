@@ -8,6 +8,20 @@ const User = require('../models/User');
 router.post('/register', async (req, res) => {
   try {
     const { name, serviceId, password, rank, unit, accessCode } = req.body;
+    // Validate Service ID format (e.g. INDIA-7-9)
+    const serviceIdRegex = /^[A-Z]+-\d+-\d+$/;
+    if (!serviceIdRegex.test(serviceId)) {
+      return res.status(400).json({
+        message: '❌ Invalid Service ID format. Use format: INDIA-7-9'
+      });
+    }
+
+  // Validate password length
+  if (password.length < 6) {
+    return res.status(400).json({
+      message: '❌ Password must be at least 6 characters.'
+    });
+  }
 
     // Verify access code based on rank
     if (rank === 'Commander') {
