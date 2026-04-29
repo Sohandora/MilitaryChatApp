@@ -9,15 +9,17 @@ export default function ChatRoom({ channel, setPage }) {
   const [isError, setIsError] = useState(false);
   const [isBurnMode, setIsBurnMode] = useState(false);
   const [burnSeconds, setBurnSeconds] = useState(10);
+  const [selectedFile, setSelectedFile] = useState(null);
+  const [uploading, setUploading] = useState(false);
   const bottomRef = useRef(null);
   const socketRef = useRef(null);
+  const fileInputRef = useRef(null);
 
   const user = JSON.parse(localStorage.getItem("user"));
   const token = localStorage.getItem("token");
   const isCommander = user.rank === "Commander";
 
   useEffect(() => {
-    // Create socket connection
     socketRef.current = io(BASE_URL, {
       transports: ["websocket", "polling"]
     });
@@ -39,12 +41,10 @@ export default function ChatRoom({ channel, setPage }) {
     };
   }, [channel._id]);
 
-  // Auto scroll to bottom
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  // Client-side burn timer
   useEffect(() => {
     const timers = [];
     messages.forEach(msg => {
@@ -82,8 +82,47 @@ export default function ChatRoom({ channel, setPage }) {
     }
   };
 
-  const handleSend = () => {
-    if (!newMessage.trim()) return;
+  // ── UPLOAD FILE ──
+  const handleFileUpload = async (file) => {
+    if (!file) return null;
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch(`${BASE_URL}/api/upload/upload`, {
+        method: "POST",
+        headers: { authorization: token },
+        body: formData
+      });
+      const data = await res.json();
+
+      if (!res.ok) {
+        setIsError(true);
+        setAlertMessage(data.message || "❌ Upload failed.");
+        setUploading(false);
+        return null;
+      }
+
+      setUploading(false);
+      return data;
+    } catch {
+      setIsError(true);
+      setAlertMessage("❌ File upload failed.");
+      setUploading(false);
+      return null;
+    }
+  };
+
+  // ── SEND MESSAGE ──
+  const handleSend = async () => {
+    if (!newMessage.trim() && !selectedFile) return;
+
+    let fileData = null;
+    if (selectedFile) {
+      fileData = await handleFileUpload(selectedFile);
+      if (!fileData) return;
+    }
 
     if (isBurnMode && isCommander) {
       socketRef.current.emit("send_burn_message", {
@@ -100,15 +139,20 @@ export default function ChatRoom({ channel, setPage }) {
         senderId: user.serviceId,
         senderName: user.name,
         senderRank: user.rank,
-        text: newMessage
+        text: newMessage,
+        fileUrl: fileData?.url || null,
+        fileName: fileData?.originalName || null,
+        fileType: fileData?.fileType || null
       });
     }
 
     setNewMessage("");
+    setSelectedFile(null);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleKeyDown = (e) => {
-    if (e.key === "Enter") handleSend();
+    if (e.key === "Enter" && !selectedFile) handleSend();
   };
 
   const formatTime = (date) => {
@@ -121,6 +165,16 @@ export default function ChatRoom({ channel, setPage }) {
   const getBurnTimeLeft = (burnAfter) => {
     const remaining = Math.ceil((new Date(burnAfter) - Date.now()) / 1000);
     return remaining > 0 ? remaining : 0;
+  };
+
+  const isImageFile = (fileType) => fileType && fileType.startsWith("image/");
+
+  const getFileIcon = (fileType) => {
+    if (!fileType) return "📎";
+    if (fileType.startsWith("image/")) return "🖼";
+    if (fileType === "application/pdf") return "📄";
+    if (fileType.includes("word")) return "📝";
+    return "📎";
   };
 
   return (
@@ -187,7 +241,40 @@ export default function ChatRoom({ channel, setPage }) {
                 </div>
               )}
 
-              <div className="msgText">{msg.text}</div>
+              {/* Text */}
+              {msg.text && (
+                <div className="msgText">{msg.text}</div>
+              )}
+
+{/* File */}
+{msg && msg.fileUrl ? (
+  <div className="msgFile">
+    {msg.fileType && msg.fileType.startsWith("image/") ? (
+      <a
+        href={String(msg.fileUrl)}
+        target="_blank"
+        rel="noreferrer"
+      >
+        <img
+          src={String(msg.fileUrl)}
+          alt={msg.fileName ? String(msg.fileName) : "image"}
+          className="msgImage"
+        />
+      </a>
+    ) : (
+      <a
+        href={String(msg.fileUrl)}
+        target="_blank"
+        rel="noreferrer"
+        className="msgFileLink"
+      >
+        {getFileIcon(msg.fileType)}{" "}
+        {msg.fileName ? String(msg.fileName) : "file"}
+      </a>
+    )}
+  </div>
+) : null}
+
               <div className="msgTime">{formatTime(msg.createdAt)}</div>
 
               {isCommanderMsg && isMine && (
@@ -230,23 +317,60 @@ export default function ChatRoom({ channel, setPage }) {
         </div>
       )}
 
+      {/* FILE PREVIEW */}
+      {selectedFile && (
+        <div className="filePreview">
+          <span className="filePreviewName">
+            {getFileIcon(selectedFile.type)} {selectedFile.name}
+          </span>
+          <button
+            className="fileRemoveBtn"
+            onClick={() => {
+              setSelectedFile(null);
+              if (fileInputRef.current) fileInputRef.current.value = "";
+            }}
+          >
+            ✕
+          </button>
+        </div>
+      )}
+
       {/* INPUT */}
       <div className="chatInput">
         <input
+          type="file"
+          ref={fileInputRef}
+          style={{ display: "none" }}
+          accept=".jpg,.jpeg,.png,.pdf,.doc,.docx,.txt"
+          onChange={e => setSelectedFile(e.target.files[0] || null)}
+        />
+        <button
+          className="attachBtn"
+          onClick={() => fileInputRef.current.click()}
+          title="Attach file"
+        >
+          📎
+        </button>
+        <input
           className={`chatInputField ${isBurnMode ? "burnInputField" : ""}`}
-          placeholder={isBurnMode
-            ? `🔥 Burn message (auto-deletes in ${burnSeconds}s)...`
-            : "Type your message..."
+          placeholder={
+            uploading
+              ? "⏳ Uploading file..."
+              : isBurnMode
+              ? `🔥 Burn message (auto-deletes in ${burnSeconds}s)...`
+              : "Type your message..."
           }
           value={newMessage}
           onChange={e => setNewMessage(e.target.value)}
           onKeyDown={handleKeyDown}
+          disabled={uploading}
         />
         <button
           className={`sendBtn ${isBurnMode ? "burnSendBtn" : ""}`}
           onClick={handleSend}
+          disabled={uploading}
         >
-          {isBurnMode ? "🔥 SEND" : "SEND ▶"}
+          {uploading ? "⏳" : isBurnMode ? "🔥 SEND" : "SEND ▶"}
         </button>
       </div>
     </div>

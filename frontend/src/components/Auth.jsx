@@ -44,43 +44,45 @@ export default function Auth({ setPage, mode, setMode }) {
   };
 
   // ── REGISTER ──
-  const handleRegister = async () => {
-    try {
-      const res = await fetch(`${BASE_URL}/api/auth/register`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(registerData)
-      });
-      const data = await res.json();
-      // Validate Service ID format
-const serviceIdRegex = /^[A-Z]+-\d+-\d+$/;
-if (!serviceIdRegex.test(registerData.serviceId)) {
-  setIsError(true);
-  setMessage("❌ Invalid Service ID format. Use format: INDIA-7-9");
-  return;
-}
+ const handleRegister = async () => {
+  // Validate Service ID format
+  const serviceIdRegex = /^[A-Z]+-\d+-\d+$/;
+  if (!serviceIdRegex.test(registerData.serviceId)) {
+    setIsError(true);
+    setMessage("❌ Invalid Service ID format.");
+    return;
+  }
 
-// Validate password length
-if (registerData.password.length < 6) {
-  setIsError(true);
-  setMessage("❌ Password must be at least 6 characters.");
-  return;
-}
-      if (!res.ok) {
-        setIsError(true);
-        setMessage(data.message || "❌ Registration failed.");
-        return;
-      }
+  // Validate password length
+  if (registerData.password.length < 6) {
+    setIsError(true);
+    setMessage("❌ Password must be at least 6 characters.");
+    return;
+  }
 
-      setIsError(false);
-      setMessage(data.message + " Please login.");
-      setTimeout(() => { setMode("login"); setMessage(""); }, 2000);
+  try {
+    const res = await fetch(`${BASE_URL}/api/auth/register`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(registerData)
+    });
+    const data = await res.json();
 
-    } catch (err) {
+    if (!res.ok) {
       setIsError(true);
-      setMessage("❌ Server unreachable. Is backend running?");
+      setMessage(data.message || "❌ Registration failed.");
+      return;
     }
-  };
+
+    setIsError(false);
+    setMessage(data.message + " Please login.");
+    setTimeout(() => { setMode("login"); setMessage(""); }, 2000);
+
+  } catch (err) {
+    setIsError(true);
+    setMessage("❌ Server unreachable. Is backend running?");
+  }
+};
 
   return (
     <div className="loginCard">

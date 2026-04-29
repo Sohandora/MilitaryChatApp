@@ -32,7 +32,20 @@ const messageSchema = new mongoose.Schema({
   burnAfter: {
     type: Date,
     default: null  // For burn-on-read feature in Module 4
-  }
+  },
+  fileUrl: {
+  type: String,
+  default: null
+},
+fileName: {
+  type: String,
+  default: null
+},
+fileType: {
+  type: String,
+  default: null
+}
+  
 }, { timestamps: true });
 
 module.exports = mongoose.model('Message', messageSchema);

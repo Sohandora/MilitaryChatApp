@@ -3,6 +3,18 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const rateLimit = require('express-rate-limit');
+
+// Max 5 login attempts per 15 minutes per IP
+const loginLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 5,
+  message: {
+    message: '❌ Too many login attempts.'
+  },
+  standardHeaders: true,
+  legacyHeaders: false
+});
 
 // ── REGISTER ──────────────────────────────
 router.post('/register', async (req, res) => {
@@ -12,7 +24,7 @@ router.post('/register', async (req, res) => {
     const serviceIdRegex = /^[A-Z]+-\d+-\d+$/;
     if (!serviceIdRegex.test(serviceId)) {
       return res.status(400).json({
-        message: '❌ Invalid Service ID format. Use format: INDIA-7-9'
+        message: '❌ Invalid Service ID format.'
       });
     }
 
@@ -68,7 +80,7 @@ router.post('/register', async (req, res) => {
 });
 
 // ── LOGIN ─────────────────────────────────
-router.post('/login', async (req, res) => {
+router.post('/login',loginLimiter, async (req, res) => {
   try {
     const { serviceId, password } = req.body;
 

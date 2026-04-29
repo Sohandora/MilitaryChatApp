@@ -1133,3 +1133,68 @@ body {
 }
 
 .modalCancelBtn:hover { background: rgba(60, 100, 60, 0.15); }
+/* ── FILE SHARING ── */
+.attachBtn {
+  padding: 10px 14px;
+  background: transparent;
+  border: 1px solid #1e3a1e;
+  border-radius: 4px;
+  color: #6cff7c;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.attachBtn:hover { background: rgba(60, 100, 60, 0.2); }
+
+.filePreview {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 24px;
+  background: rgba(10, 16, 10, 0.97);
+  border-top: 1px solid #1e3a1e;
+}
+
+.filePreviewName {
+  font-size: 11px;
+  color: #6cff7c;
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.fileRemoveBtn {
+  background: transparent;
+  border: none;
+  color: #ff4d4d;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.msgFile {
+  margin-top: 6px;
+}
+
+.msgImage {
+  max-width: 200px;
+  max-height: 200px;
+  border-radius: 4px;
+  border: 1px solid #1e3a1e;
+  cursor: pointer;
+}
+
+.msgFileLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #1e3a1e;
+  border-radius: 4px;
+  color: #6cff7c;
+  font-size: 12px;
+  font-family: 'Share Tech Mono', monospace;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.msgFileLink:hover { background: rgba(60, 100, 60, 0.2); }

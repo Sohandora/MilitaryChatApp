@@ -13,6 +13,7 @@ const Message = require('./models/Message');
 const Channel = require('./models/Channel');
 const sosRoutes = require('./routes/sosRoutes');
 const SOS = require('./models/SOS');
+const uploadRoutes = require('./routes/uploadRoutes'); // ← ADD
 
 const app = express();
 const server = http.createServer(app);
@@ -35,6 +36,7 @@ app.options("/:any", cors());
 app.use(express.json());
 
 // Routes
+app.use('/api/upload', uploadRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/channels', channelRoutes);
@@ -58,41 +60,47 @@ io.on('connection', (socket) => {
   });
 
   // Send a normal message
-  socket.on('send_message', async (data) => {
-    try {
-      const { channelId, senderId, senderName, senderRank, text } = data;
+socket.on('send_message', async (data) => {
+  try {
+    const { channelId, senderId, senderName, senderRank, text, fileUrl, fileName, fileType } = data;
 
-      const channel = await Channel.findById(channelId);
-      if (!channel) return;
+    const channel = await Channel.findById(channelId);
+    if (!channel) return;
 
-      const message = new Message({
-        channelId,
-        senderId,
-        senderName,
-        senderRank,
-        text,
-        readBy: [senderId],
-        burnAfter: null
-      });
+    const message = new Message({
+      channelId,
+      senderId,
+      senderName,
+      senderRank,
+      text: text || '',
+      readBy: [senderId],
+      burnAfter: null,
+      fileUrl: fileUrl || null,
+      fileName: fileName || null,
+      fileType: fileType || null
+    });
 
-      await message.save();
+    await message.save();
 
-      io.to(channelId).emit('receive_message', {
-        _id: message._id,
-        channelId,
-        senderId,
-        senderName,
-        senderRank,
-        text,
-        readBy: message.readBy,
-        burnAfter: null,
-        createdAt: message.createdAt
-      });
+    io.to(channelId).emit('receive_message', {
+      _id: message._id,
+      channelId,
+      senderId,
+      senderName,
+      senderRank,
+      text: message.text,
+      readBy: message.readBy,
+      burnAfter: null,
+      fileUrl: message.fileUrl,
+      fileName: message.fileName,
+      fileType: message.fileType,
+      createdAt: message.createdAt
+    });
 
-    } catch (err) {
-      console.log('❌ Message error:', err.message);
-    }
-  });
+  } catch (err) {
+    console.log('❌ Message error:', err.message);
+  }
+});
 
   // Send a burn message
   socket.on('send_burn_message', async (data) => {
